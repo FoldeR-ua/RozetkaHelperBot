@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Telegram.Bot;
@@ -117,6 +118,19 @@ namespace RozetkaHelperBot.Dialog
                         break;
                     case string sub when sub.ToLower().Contains("назва:"):
                         await botClient.SendTextMessageAsync(message.Chat.Id, "Nice job", replyMarkup: firstShopping);
+                        Parsing.Parsing parsing = new RozetkaHelperBot.Parsing.Parsing();
+                        parsing.Url = "https://rozetka.com.ua/ua/search/?text=Asus+Zenbook+14&producer=asus&page=1";
+                        var temp = parsing.ParsingNodesTP();
+                        var titles = temp.title;
+                        var prices = temp.price;
+                        List<Product.Product> products = new List<Product.Product>();
+                        for(int i = 0; i < 3; i++)
+                        {
+                            products.Add(new Product.Product() { Title = titles[i].InnerText, Price = Convert.ToInt32(prices[i].InnerText) });
+                        }
+                        
+                        foreach (var item in products)
+                            Console.WriteLine(item.ToString());
                         //PARSING PRODUCT
                         break;
                     default:
